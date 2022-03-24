@@ -1,14 +1,14 @@
 <h2>Get Brands</h2>
 <pre>
-  let axios = require('axios');
-  let token = 'token login';
-  let config = {
+let axios = require('axios');
+let token = 'token login';
+let config = {
     method: 'get',
     url: 'http://localhost:3000/api/kate-check/brand',
     headers: { 
       'Authorization': `Bearer ${token}`
     }
-  };
+};
 
 axios(config)
 .then(function (response) {
@@ -19,6 +19,44 @@ console.log(error);
 });
 
 </pre>
+<h2>Output</h2>
+<pre>
+  [
+    {
+        "_id": "623c79e95e447cb020b2f39d",
+        "brandName": "Hermes",
+        "slug": "hermes",
+        "__v": 0,
+        "createdAt": "2022-03-24T14:02:18.031Z",
+        "updatedAt": "2022-03-24T14:02:18.031Z"
+    },
+    {
+        "_id": "623c79e95e447cb020b2f39e",
+        "brandName": "Chanel",
+        "slug": "chanel",
+        "__v": 0,
+        "createdAt": "2022-03-24T14:02:18.032Z",
+        "updatedAt": "2022-03-24T14:02:18.032Z"
+    },
+    {
+        "_id": "623c79e95e447cb020b2f39f",
+        "brandName": "Louis Vuitton",
+        "slug": "louis-vuitton",
+        "__v": 0,
+        "createdAt": "2022-03-24T14:02:18.032Z",
+        "updatedAt": "2022-03-24T14:02:18.032Z"
+    },
+    {
+        "_id": "623c79e95e447cb020b2f3a3",
+        "brandName": "Celine",
+        "slug": "celine",
+        "__v": 0,
+        "createdAt": "2022-03-24T14:02:18.032Z",
+        "updatedAt": "2022-03-24T14:02:18.032Z"
+    }
+]
+</pre>
+
 <h2>Add Order</h2>
 <p>
   <pre>
