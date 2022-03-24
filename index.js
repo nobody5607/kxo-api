@@ -2,29 +2,25 @@ import express from "express";
 const app = express();
 import cors from "cors";
 import dotenv from "dotenv";
-import http from "http";
-import { Server } from "socket.io";
-import { SocketNoty } from "./socket/noty.js";
-import { SocketChat } from "./socket/chat.js";
+import formidableExpress from "express-formidable";
+
 import { connectDatabase } from "./config/MongoDb.js";
+import importRoute from "./routers/importRoute.js";
+import kateCheckRoute from "./routers/kateCheckRoute.js";
 dotenv.config();
 connectDatabase(); //connection db
-const server = http.createServer(app);
+
 app.use(cors());
+app.use(formidableExpress());
+app.use(express.static("uploads"));
+app.use("/uploads", express.static("uploads"));
+
 const PORT = process.env.APP_PORT || 3000;
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  },
+
+app.get("/", async (req, res) => {
+  res.send("katexoxo");
 });
-//socket io
-io.on("connection", (socket) => {
-  SocketNoty(socket);
-  SocketChat(socket);
-  //disconnect
-  socket.on("disconnect", () => {
-    console.log("User Disconnected", socket.id);
-  });
-});
-server.listen(PORT, () => console.log(`Start ... http://localhost:${PORT}`));
+
+app.use("/api/import/", importRoute);
+app.use("/api/kate-check/", kateCheckRoute);
+app.listen(PORT, () => console.log(`Start ... http://localhost:${PORT}`));
