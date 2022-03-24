@@ -60,41 +60,7 @@ kateCheckRoute.post("/order", Auth, async (req, res) => {
       res.json({ message: "ไม่พบข้อมูล" });
     }
 
-    // let orderData = {
-    //   userID: req.user.id,
-    //   brand: "623c79e95e447cb020b2f39e",
-    //   orderItems: [
-    //     {
-    //       name: "แบรนด์ CHANEL",
-    //       qty: 1,
-    //       price: 4500,
-    //     },
-    //     {
-    //       name: "MAILED AUTHENTICITY CARD บริการออกใบรับรองโดย ENTRUPHY",
-    //       qty: 1,
-    //       price: 500,
-    //     },
-    //     {
-    //       name: "SPA บริการทำสปากระเป๋า",
-    //       qty: 1,
-    //       price: 3000,
-    //     },
-    //   ],
-    // "productImages": [
-    //   {"name": "xxx.jpg","number":1}
-    // ],
-    //   paymentMethod: "ATM",
-    //   paymentResult: {
-    //     resultCode: "",
-    //     amount: "",
-    //     referenceNo: "",
-    //     gbpReferenceNo: "",
-    //     statusText: "",
-    //     imageSlip: "",
-    //     imageSlip: "",
-    //   },
-    //   totalPrice: 10000.5,
-    // };
+    
     // console.log(JSON.stringify(orderData));
     // const resultOrder = await Order.create(orderData);
   } catch (error) {
