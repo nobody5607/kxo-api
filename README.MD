@@ -1,3 +1,10 @@
+<h1>Install</h1>
+<pre>
+  git clone https://github.com/nobody5607/kxo-api.git
+  cd kxo-api
+  npm install
+  npm sttart
+</pre>
 <h2>Get Brands</h2>
 <pre>
 let axios = require('axios');
@@ -57,7 +64,7 @@ console.log(error);
 ]
 </pre>
 
-<h2>SELECT BRANDS</h1>
+<h2>Select Brand</h1>
 <pre>
 let axios = require('axios');
 let token = 'token login';
