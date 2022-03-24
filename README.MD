@@ -1,5 +1,25 @@
+<h2>Get Brands</h2>
+<pre>
+  let axios = require('axios');
+  let token = 'token login';
+  let config = {
+    method: 'get',
+    url: 'http://localhost:3000/api/kate-check/brand',
+    headers: { 
+      'Authorization': `Bearer ${token}`
+    }
+  };
+
+axios(config)
+.then(function (response) {
+console.log(JSON.stringify(response.data));
+})
+.catch(function (error) {
+console.log(error);
+});
+
+</pre>
 <h2>Add Order</h2>
- 
 <p>
   <pre>
   let axios = require('axios');
