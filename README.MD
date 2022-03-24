@@ -3,6 +3,8 @@
   git clone https://github.com/nobody5607/kxo-api.git
   cd kxo-api
   npm install
+  mv .env-local .env
+  config MONGO_URL in .env
   npm sttart
 </pre>
 <h2>Get Brands</h2>
