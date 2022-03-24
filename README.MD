@@ -1,7 +1,8 @@
 <h2>Add Order</h2>
 <p>var axios = require('axios');</p>
 <p>var data = new FormData();</p> 
-<p>var dataOrder = {
+<p>
+  <pre>var dataOrder = {
     "userID":5,
     "brand":"623c79e95e447cb020b2f39e",
     "orderItems":[
@@ -20,7 +21,9 @@
         "imageSlip":""
     },
     "totalPrice":10000.5
-}</p>
+}</pre>
+
+</p>
 <p> data.append('data',JSON.stringify(dataOrder))</p> 
 <p> data.append('files', 'fileImage');</p> 
 <p> var token = 'token login'</p>
