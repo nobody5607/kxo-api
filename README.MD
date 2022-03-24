@@ -313,3 +313,42 @@ let token = 'token login';
 </pre>
 
 </p>
+<h2>Output</h2>
+<pre>{
+    "userID": 5,
+    "brand": "623c79e95e447cb020b2f39e",
+    "orderItems": [
+        {
+            "name": "แบรนด์ CHANEL",
+            "qty": 1,
+            "price": 4500
+        },
+        {
+            "name": "MAILED AUTHENTICITY CARD บริการออกใบรับรองโดย ENTRUPHY",
+            "qty": 1,
+            "price": 500
+        },
+        {
+            "name": "SPA บริการทำสปากระเป๋า",
+            "qty": 1,
+            "price": 3000
+        }
+    ],
+    "paymentMethod": "ATM",
+    "paymentResult": {
+        "resultCode": "",
+        "amount": "",
+        "referenceNo": "",
+        "gbpReferenceNo": "",
+        "statusText": "",
+        "imageSlip": ""
+    },
+    "totalPrice": 10000.5,
+    "productImages": [
+        {
+            "name": "kxo_20220325002737rbx51.jpg",
+            "number": 1,
+            "path": "http://localhost:3000/uploads/images/kxo_20220325002737rbx51.jpg"
+        }
+    ]
+}</pre>
