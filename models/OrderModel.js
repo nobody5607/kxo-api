@@ -11,13 +11,20 @@ const orderSchema = mongoose.Schema(
       required: true,
       ref: "Brand",
     },
-    orderItems: [
-      {
-        name: { type: String, required: true },
-        qty: { type: Number, required: true },
-        price: { type: Number, required: true },
-      },
-    ],
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Category",
+    },
+    model: {
+      type: String,
+      required: true,
+    },
+    additionalOptions: {
+      serialNumber: { type: String },
+      note: { type: String },
+      webLink: { type: String },
+    },
     productImages: [
       {
         name: { type: String, required: true },
@@ -25,6 +32,20 @@ const orderSchema = mongoose.Schema(
         number: { type: Number, required: true },
       },
     ],
+    orderItems: [
+      {
+        name: { type: String, required: true },
+        detail: { type: String },
+        qty: { type: Number, required: true },
+        price: { type: Number, required: true },
+        discount: { type: Number, required: true },
+      },
+    ],
+    coupon: {
+      couponCode: { type: String },
+      discount: { type: Number },
+    },
+    vat: { type: Number },
     paymentMethod: {
       type: String,
       required: true,
@@ -39,7 +60,14 @@ const orderSchema = mongoose.Schema(
       imageSlip: { type: String },
       dateSlip: { type: String },
     },
+    price: {
+      //price
+      type: Number,
+      required: true,
+      default: 0.0,
+    },
     totalPrice: {
+      //price - coupone + vat
       type: Number,
       required: true,
       default: 0.0,

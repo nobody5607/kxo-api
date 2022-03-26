@@ -4,7 +4,6 @@ const brandSchema = mongoose.Schema(
     brandName: {
       type: String,
       required: true,
-      // unique: true,
     },
     slug: {
       type: String,

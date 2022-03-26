@@ -1,0 +1,16 @@
+{
+    "RECORDS": [
+         {
+             "name":"MAILED AUTHENTICITY CARD",
+             "detail":"บริการออกใบรับรองโดย ENTRUPHY",
+             "price":500,
+             "discount":500 
+         },
+         {
+            "name":"SPA",
+            "detail":"บริการทำสปากระเป๋า",
+            "price":3000,
+            "discount":3000 
+        }
+    ]
+}
