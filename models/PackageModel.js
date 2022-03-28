@@ -31,9 +31,9 @@ const packageSchema = mongoose.Schema(
       path: { type: String },
       name: { type: String },
     },
-    price: { type: Number },
     categorys: [{ id: { type: String }, name: { type: String } }],
     discount: { type: Number },
+    price: { type: Number },
     discountStatus: { type: Boolean },
     status: {
       type: String,

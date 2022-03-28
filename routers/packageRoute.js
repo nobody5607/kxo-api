@@ -4,7 +4,7 @@ import Category from "../models/CategoryModel";
 import Package from "../models/PackageModel";
 const packageRoute = express.Router();
 const getPagination = (page, size) => {
-  const limit = size ? +size : 20;
+  const limit = size ? +size : 10;
   const offset = page ? page * limit : 0;
   return { limit, offset };
 };
@@ -28,6 +28,7 @@ packageRoute.get("/", Auth, async (req, res) => {
     };
 
     const packages = await Package.paginate({}, options);
+
     res.json({
       data: packages.docs,
       total: packages.totalDocs,

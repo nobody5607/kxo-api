@@ -20,11 +20,13 @@ const orderSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    additionalOptions: {
-      serialNumber: { type: String },
-      note: { type: String },
-      webLink: { type: String },
-    },
+    additionalOptions: [
+      {
+        field: { type: String },
+        name: { type: String },
+        value: { type: String },
+      },
+    ],
     productImages: [
       {
         name: { type: String, required: true },
@@ -39,6 +41,7 @@ const orderSchema = mongoose.Schema(
         qty: { type: Number, required: true },
         price: { type: Number, required: true },
         discount: { type: Number, required: true },
+        discountStatus: { type: Boolean },
       },
     ],
     coupon: {
