@@ -57,7 +57,11 @@ orderRoute.post("/", Auth, async (req, res) => {
         number++;
       }
       //end upload images
-      data["userID"] = req.user.id;
+
+      const user = await User.find({ userID: req.user.id });
+      if (user) {
+        data["userID"] = user._id;
+      }
       data["productImages"] = productImages;
       const resultOrder = await Order.create(data);
       res.json(resultOrder);

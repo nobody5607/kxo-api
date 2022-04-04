@@ -3,8 +3,9 @@ import mongoose from "mongoose";
 const orderSchema = mongoose.Schema(
   {
     userID: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
+      ref: "User",
     },
     brand: {
       type: mongoose.Schema.Types.ObjectId,
