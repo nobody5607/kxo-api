@@ -2,6 +2,7 @@ import express from "express";
 import { Auth } from "../middlewere/Auth";
 import Order from "../models/OrderModel";
 import User from "../models/UserModel";
+import moment from "moment";
 const paymentRoute = express.Router();
 paymentRoute.post("/", async (req, res) => {
   try {
@@ -20,26 +21,28 @@ paymentRoute.post("/", async (req, res) => {
       gbpReferenceNo: gbpReferenceNo,
       statusText: statusText,
       imageSlip: "",
-      dateSlip: "",
+      dateSlip: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
     };
-    let order = await Order.findById(referenceNo);
-    if (order) {
-      order["paymentResult"] = paymentResult;
-      const updatedOrder = await order.save();
 
-      res.redirect(
-        `${process.env.FRONTEND_URL}/step-check2/thankyou?ref_id=${referenceNo}`
-      );
-    } else {
-      res.json({ message: "not found order" });
-    }
-    // return res.json(order);
+    const order = await Order.findOneAndUpdate(
+      { _id: referenceNo },
+      {
+        $set: {
+          orderStatus: "62457a5e2f4aa4baa63d35a4",//ชำระเงินสำเร็จ
+          paymentResult: paymentResult,
+        },
+      },
+      {
+        upsert: true,
+        returnDocument: "after", // this is new !
+      }
+    );
+    res.redirect(
+      `${process.env.FRONTEND_URL}/step-check2/thankyou?ref_id=${referenceNo}`
+    ); 
+     
   } catch (error) {
-    res.json({
-      status: "nok",
-      message: error.message,
-      log: error,
-    });
+    res.json(error);
   }
 });
 export default paymentRoute;

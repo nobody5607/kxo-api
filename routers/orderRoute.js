@@ -103,7 +103,7 @@ orderRoute.post("/upload-slip", Auth, async (req, res) => {
         { _id: data.orderID },
         {
           $set: {
-            orderStatus: data.orderStatus,
+            orderStatus: "624b103b6d5d658a1f341e1a", //อัปโหลดสลิปแล้ว
             paymentResult: paymentResult,
           },
         },
@@ -113,13 +113,6 @@ orderRoute.post("/upload-slip", Auth, async (req, res) => {
         }
       );
       res.json(order);
-      //check file name
-
-      //end upload images
-      // data["userID"] = req.user.id;
-      // data["productImages"] = productImages;
-      // const resultOrder = await Order.create(data);
-      // res.json(resultOrder);
     } else {
       res.json({ message: "ไม่พบข้อมูล" });
     }
