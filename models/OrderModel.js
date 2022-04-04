@@ -64,16 +64,24 @@ const orderSchema = mongoose.Schema(
       dateSlip: { type: String },
     },
     price: {
-      //price
-      type: Number,
+      type: Number, //price
       required: true,
       default: 0.0,
     },
     totalPrice: {
-      //price - coupone + vat
-      type: Number,
+      type: Number, //price - coupone + vat
       required: true,
       default: 0.0,
+    },
+    productStatus: {
+      type: mongoose.Schema.Types.ObjectId, //สถานะการตรวจสอบสินค้า
+      required: true,
+      ref: "ProductStatus",
+    },
+    orderStatus: {
+      type: mongoose.Schema.Types.ObjectId, //สถานะการจ่ายเงิน
+      required: true,
+      ref: "OrderStatus",
     },
   },
   {

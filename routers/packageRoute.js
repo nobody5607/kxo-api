@@ -8,6 +8,7 @@ const getPagination = (page, size) => {
   const offset = page ? page * limit : 0;
   return { limit, offset };
 };
+
 packageRoute.get("/", Auth, async (req, res) => {
   try {
     const { page, size, title } = req.query;
@@ -16,18 +17,20 @@ packageRoute.get("/", Auth, async (req, res) => {
       //sort: { date: -1 },
       populate: [
         { path: "brands", select: ["brandName"] },
+        { path: "categorys", select: ["categoryName"] },
         {
           path: "additionalOptions",
           select: ["name", "field"],
         },
         { path: "otherService" },
       ],
+
       lean: true,
       offset: offset,
       limit: limit,
     };
 
-    const packages = await Package.paginate({}, options);
+    const packages = await Package.paginate({ status: "publish" }, options);
 
     res.json({
       data: packages.docs,
@@ -42,22 +45,16 @@ packageRoute.get("/", Auth, async (req, res) => {
 packageRoute.get("/:id", Auth, async (req, res) => {
   try {
     const { id } = req.params;
-    const packages = await Package.findById(id)
-      .populate({
-        path: "brands",
-        select: ["brandName"],
-      })
-      .populate({
+    const packages = await Package.findById(id).populate([
+      { path: "brands", select: ["brandName"] },
+      { path: "categorys" },
+      {
         path: "additionalOptions",
         select: ["name", "field"],
-      })
-      .populate("otherService");
-    const categoryResult = await Category.find({});
-    let categorys = [];
-    for (let i of categoryResult) {
-      categorys.push({ name: i.categoryName });
-    }
-    packages["categorys"] = categorys;
+      },
+      { path: "otherService" },
+    ]);
+
     res.json(packages);
   } catch (error) {
     res.json(error);

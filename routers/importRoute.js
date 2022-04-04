@@ -8,6 +8,8 @@ import Item from "../models/ItemModel";
 import Package from "../models/PackageModel";
 import AdditionalOption from "../models/AdditionalOptionModel";
 import OtherService from "../models/OtherServiceModel";
+import OrderStatus from "../models/OrderStatusModel";
+import ProductStatus from "../models/ProductStatusModel";
 
 //import brand
 importRoute.get("/brand", async (req, res) => {
@@ -131,6 +133,38 @@ importRoute.get("/other-service", async (req, res) => {
     },
   ];
   const result = await OtherService.insertMany(data);
+  res.send(result);
+});
+
+importRoute.get("/order-status", async (req, res) => {
+  const data = [
+    {
+      name: "รอชำระเงิน",
+    },
+    {
+      name: "ชำระเงินแล้ว",
+    },
+    {
+      name: "ยกเลิก",
+    },
+  ];
+  const result = await OrderStatus.insertMany(data);
+  res.send(result);
+});
+
+importRoute.get("/product-status", async (req, res) => {
+  const data = [
+    {
+      name: "รอตรวจสอบ",
+    },
+    {
+      name: "ผ่าน",
+    },
+    {
+      name: "ไม่ผ่าน",
+    },
+  ];
+  const result = await ProductStatus.insertMany(data);
   res.send(result);
 });
 export default importRoute;

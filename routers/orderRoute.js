@@ -2,6 +2,8 @@ import express from "express";
 import { Auth } from "../middlewere/Auth";
 import Order from "../models/OrderModel";
 import User from "../models/UserModel";
+import { uploadImage } from "../utils/utils";
+import moment from "moment";
 const orderRoute = express.Router();
 orderRoute.get("/:id", Auth, async (req, res) => {
   try {
@@ -59,6 +61,65 @@ orderRoute.post("/", Auth, async (req, res) => {
       data["productImages"] = productImages;
       const resultOrder = await Order.create(data);
       res.json(resultOrder);
+    } else {
+      res.json({ message: "ไม่พบข้อมูล" });
+    }
+  } catch (error) {
+    res.json({ message: error.message });
+    console.log(error);
+  }
+});
+
+orderRoute.post("/upload-slip", Auth, async (req, res) => {
+  try {
+    let { data } = req.fields;
+
+    let productImages = "";
+    if (data) {
+      data = JSON.parse(data);
+      if (Object.keys(req.files).length == 0) {
+        return res.json({
+          status: "nok",
+          message: "กรุณาเลือกไฟล์",
+        });
+      }
+      //upload images
+
+      for (let i in req.files) {
+        let result = await uploadImage({ file: req.files[i] });
+        productImages = `${process.env.IMAGE_URL}/uploads/images/${result}`;
+      }
+      //get order
+      let paymentResult = {
+        amount: data.amount,
+        gbpReferenceNo: "",
+        imageSlip: productImages,
+        referenceNo: "",
+        resultCode: "",
+        statusText: "",
+        dateSlip: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+      };
+      const order = await Order.findOneAndUpdate(
+        { _id: data.orderID },
+        {
+          $set: {
+            orderStatus: data.orderStatus,
+            paymentResult: paymentResult,
+          },
+        },
+        {
+          upsert: true,
+          returnDocument: "after", // this is new !
+        }
+      );
+      res.json(order);
+      //check file name
+
+      //end upload images
+      // data["userID"] = req.user.id;
+      // data["productImages"] = productImages;
+      // const resultOrder = await Order.create(data);
+      // res.json(resultOrder);
     } else {
       res.json({ message: "ไม่พบข้อมูล" });
     }

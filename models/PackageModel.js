@@ -31,7 +31,12 @@ const packageSchema = mongoose.Schema(
       path: { type: String },
       name: { type: String },
     },
-    categorys: [{ id: { type: String }, name: { type: String } }],
+    categorys: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Category",
+      },
+    ],
     discount: { type: Number },
     price: { type: Number },
     discountStatus: { type: Boolean },
