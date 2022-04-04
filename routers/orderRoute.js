@@ -58,7 +58,8 @@ orderRoute.post("/", Auth, async (req, res) => {
       }
       //end upload images
 
-      const user = await User.find({ userID: req.user.id });
+      const user = await User.findOne({ userID: req.user.id });
+
       if (user) {
         data["userID"] = user._id;
       }
