@@ -94,7 +94,7 @@ orderRoute.post("/", Auth, async (req, res) => {
         name: `${req.user.firstname} ${req.user.lastname}`,
         email: req.user.email,
       };
-      data["userID"] = createBy;
+      data["user"] = createBy;
       data["productImages"] = productImages;
       const resultOrder = await Order.create(data);
       res.json(resultOrder);
