@@ -20,6 +20,9 @@ orderRoute.get("/", Auth, async (req, res) => {
       populate: [
         { path: "brand", select: ["brandName"] },
         { path: "category", select: ["categoryName"] },
+        { path: "orderStatus", select: ["name"] },
+        { path: "productStatus", select: ["name"] },
+        { path: "package" },
       ],
       lean: true,
       offset: offset,
@@ -93,6 +96,7 @@ orderRoute.post("/", Auth, async (req, res) => {
         id: req.user.id,
         name: `${req.user.firstname} ${req.user.lastname}`,
         email: req.user.email,
+        email: req.user.phone,
       };
       data["user"] = createBy;
       data["productImages"] = productImages;
@@ -153,6 +157,32 @@ orderRoute.post("/upload-slip", Auth, async (req, res) => {
     } else {
       res.json({ message: "ไม่พบข้อมูล" });
     }
+  } catch (error) {
+    res.json({ message: error.message });
+    console.log(error);
+  }
+});
+orderRoute.put("/update-status/:id", Auth, async (req, res) => {
+  try {
+    let { orderStatus } = req.fields;
+    let { id } = req.params;
+    if (!id) {
+      return res.json({ message: "ไม่พบข้อมูล" });
+    }
+
+    const order = await Order.findOneAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          orderStatus: orderStatus,
+        },
+      },
+      {
+        upsert: true,
+        returnDocument: "after", // this is new !
+      }
+    );
+    res.json(order);
   } catch (error) {
     res.json({ message: error.message });
     console.log(error);

@@ -12,6 +12,7 @@ import brandRoute from "./routers/brandRoute";
 import categoryRoute from "./routers/categoryRoute";
 import additionalRoute from "./routers/additionalRoute";
 import otherServiceRoute from "./routers/otherServiceRoute";
+import orderStatusRoute from "./routers/orderStatusRoute";
 dotenv.config();
 connectDatabase(); //connection db
 app.use(cors());
@@ -26,6 +27,7 @@ const defaultPath = "/api/kate-check/";
 app.use("/api/import/", importRoute);
 app.use(defaultPath + "package", packageRoute);
 app.use(defaultPath + "order", orderRoute);
+app.use(defaultPath + "order-status", orderStatusRoute);
 app.use(defaultPath + "payment", paymentRoute);
 app.use(defaultPath + "brand", brandRoute);
 app.use(defaultPath + "category", categoryRoute);
