@@ -3,6 +3,11 @@ import mongoosePaginate from "mongoose-paginate-v2";
 
 const packageSchema = mongoose.Schema(
   {
+    createBy: {
+      id: { type: String },
+      name: { type: String },
+      email: { type: String },
+    },
     name: {
       type: String,
       required: true,

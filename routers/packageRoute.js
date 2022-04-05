@@ -83,6 +83,7 @@ packageRoute.post("/", Auth, async (req, res) => {
       }
       if (id) {
         //update
+
         const result = await Package.findOneAndUpdate(
           { _id: id },
           {
@@ -94,6 +95,12 @@ packageRoute.post("/", Auth, async (req, res) => {
           }
         );
       } else {
+        let createBy = {
+          id: req.user.id,
+          name: `${req.user.firstname} ${req.user.lastname}`,
+          email: req.user.email,
+        };
+        data["createBy"] = createBy;
         const result = await Package.insertMany(data);
       }
 
