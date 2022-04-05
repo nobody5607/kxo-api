@@ -7,6 +7,11 @@ const orderSchema = mongoose.Schema(
       name: { type: String },
       email: { type: String },
     },
+    package: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Package",
+    },
     brand: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
