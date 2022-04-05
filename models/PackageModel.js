@@ -37,6 +37,10 @@ const packageSchema = mongoose.Schema(
         ref: "Category",
       },
     ],
+    model: {
+      type: String,
+      required: true,
+    },
     discount: { type: Number },
     price: { type: Number },
     discountStatus: { type: Boolean },

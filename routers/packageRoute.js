@@ -1,7 +1,7 @@
 import express from "express";
 import { Auth } from "../middlewere/Auth";
-import Category from "../models/CategoryModel";
 import Package from "../models/PackageModel";
+import { uploadImage } from "../utils/utils";
 const packageRoute = express.Router();
 const getPagination = (page, size) => {
   const limit = size ? +size : 10;
@@ -11,7 +11,7 @@ const getPagination = (page, size) => {
 
 packageRoute.get("/", Auth, async (req, res) => {
   try {
-    const { page, size, title } = req.query;
+    const { page, size, title, backend } = req.query;
     const { limit, offset } = getPagination(page - 1, size);
     var options = {
       //sort: { date: -1 },
@@ -29,8 +29,11 @@ packageRoute.get("/", Auth, async (req, res) => {
       offset: offset,
       limit: limit,
     };
-
-    const packages = await Package.paginate({ status: "publish" }, options);
+    let condition = {};
+    if (!backend) {
+      condition = { status: "publish" };
+    }
+    const packages = await Package.paginate(condition, options);
 
     res.json({
       data: packages.docs,
@@ -62,22 +65,63 @@ packageRoute.get("/:id", Auth, async (req, res) => {
 });
 packageRoute.post("/", Auth, async (req, res) => {
   try {
-    const packageData = {
-      name: "",
-      brand: [],
+    let { data, id } = req.fields;
 
-      additionalOptions: [],
-      otherService: [],
-      image: {},
-      price: 1500,
-      discount: 1390,
-      status: "draft",
-      discountStatus: false,
-    };
-    const result = await Package.insertMany(packageData);
-    res.json(result);
+    if (data) {
+      data = JSON.parse(data);
+      let productImages = "";
+
+      if (Object.keys(req.files).length > 0) {
+        for (let i in req.files) {
+          let result = await uploadImage({ file: req.files[i] });
+          productImages = `${process.env.IMAGE_URL}/uploads/images/${result}`;
+        }
+        data["image"] = {
+          path: productImages,
+          name: productImages,
+        };
+      }
+      if (id) {
+        //update
+        const result = await Package.findOneAndUpdate(
+          { _id: id },
+          {
+            $set: data,
+          },
+          {
+            upsert: true,
+            returnDocument: "after", // this is new !
+          }
+        );
+      } else {
+        const result = await Package.insertMany(data);
+      }
+
+      return res.json(result);
+    }
+    return res.json({ msg: "not found data" });
   } catch (error) {
-    res.json(error);
+    return res.json(error);
+  }
+});
+
+packageRoute.delete("/:id", Auth, async (req, res) => {
+  try {
+    let { id } = req.params;
+    const result = await Package.findOneAndUpdate(
+      { _id: id },
+      {
+        $set: { status: "delete" },
+      },
+      {
+        upsert: true,
+        returnDocument: "after", // this is new !
+      }
+    );
+
+    return res.json(result);
+  } catch (error) {
+    return res.json(error);
   }
 });
 export default packageRoute;
