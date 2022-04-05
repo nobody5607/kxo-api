@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
-
+import mongoosePaginate from "mongoose-paginate-v2";
 const orderSchema = mongoose.Schema(
   {
     userID: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "User",
+      id: { type: String },
+      name: { type: String },
+      email: { type: String },
     },
     brand: {
       type: mongoose.Schema.Types.ObjectId,
@@ -89,7 +89,7 @@ const orderSchema = mongoose.Schema(
     timestamps: true,
   }
 );
-
+orderSchema.plugin(mongoosePaginate);
 const Order = mongoose.model("Order", orderSchema);
 
 export default Order;

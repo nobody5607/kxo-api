@@ -5,6 +5,39 @@ import User from "../models/UserModel";
 import { uploadImage } from "../utils/utils";
 import moment from "moment";
 const orderRoute = express.Router();
+
+const getPagination = (page, size) => {
+  const limit = size ? +size : 10;
+  const offset = page ? page * limit : 0;
+  return { limit, offset };
+};
+
+orderRoute.get("/", Auth, async (req, res) => {
+  try {
+    const { page, size, title, backend } = req.query;
+    const { limit, offset } = getPagination(page - 1, size);
+    var options = {
+      populate: [
+        { path: "brand", select: ["brandName"] },
+        { path: "category", select: ["categoryName"] },
+      ],
+      lean: true,
+      offset: offset,
+      limit: limit,
+    };
+    let condition = {};
+    const packages = await Order.paginate(condition, options);
+    res.json({
+      data: packages.docs,
+      total: packages.totalDocs,
+      totalPages: packages.totalPages,
+      currentPage: packages.page,
+    });
+  } catch (error) {
+    res.json(error);
+  }
+});
+
 orderRoute.get("/:id", Auth, async (req, res) => {
   try {
     let { id } = req.params;
@@ -56,13 +89,12 @@ orderRoute.post("/", Auth, async (req, res) => {
         });
         number++;
       }
-      //end upload images
-
-      const user = await User.findOne({ userID: req.user.id });
-
-      if (user) {
-        data["userID"] = user._id;
-      }
+      let createBy = {
+        id: req.user.id,
+        name: `${req.user.firstname} ${req.user.lastname}`,
+        email: req.user.email,
+      };
+      data["userID"] = createBy;
       data["productImages"] = productImages;
       const resultOrder = await Order.create(data);
       res.json(resultOrder);
