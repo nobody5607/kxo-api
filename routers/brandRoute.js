@@ -13,48 +13,53 @@ brandRoute.get("/", Auth, async (req, res) => {
 });
 brandRoute.get("/:id", Auth, async (req, res) => {
   try {
-    const { id } = req.params;
-    const packages = await Package.findById(id).populate([
-      { path: "brands", select: ["brandName"] },
-      { path: "categorys" },
-      {
-        path: "additionalOptions",
-        select: ["name", "field"],
-      },
-      { path: "otherService" },
-    ]);
-
-    res.json(packages);
+    let id = req.params.id;
+    const result = await Brand.findById(id);
+    res.json(result);
   } catch (error) {
     res.json(error);
   }
 });
 brandRoute.post("/", Auth, async (req, res) => {
   try {
-    const packageData = {
-      name: "CELINE",
-      brand: [
-        "623c79e95e447cb020b2f39d",
-        "623c79e95e447cb020b2f39e",
-        "623c79e95e447cb020b2f3a0",
-      ],
-
-      additionalOptions: [
-        "623e975ca99b7a62d47bbd40",
-        "623e975ca99b7a62d47bbd41",
-        "623e975ca99b7a62d47bbd42",
-      ],
-      otherService: ["623e9b80aef625f4839ec4c4", "623e9b80aef625f4839ec4c5"],
-      image: {
-        path: "http://localhost:3000/uploads/images/celine.png",
-        name: "celine.png",
+    const result = await Brand.create(req.fields);
+    res.json(result);
+  } catch (error) {
+    res.json(error);
+  }
+});
+brandRoute.put("/:id", Auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { brandName } = req.fields;
+    if (!id) {
+      res.send("ไม่พบข้อมูล");
+    }
+    const result = await Brand.findOneAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          brandName: brandName, //อัปโหลดสลิปแล้ว
+        },
       },
-      price: 1500,
-      discount: 1390,
-      status: "draft",
-      discountStatus: false,
-    };
-    const result = await Package.insertMany(packageData);
+      {
+        upsert: true,
+        returnDocument: "after", // this is new !
+      }
+    );
+    res.json(result);
+  } catch (error) {
+    res.json(error);
+  }
+});
+
+brandRoute.delete("/:id", Auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      res.send("ไม่พบข้อมูล");
+    }
+    const result = await Brand.deleteOne({ _id: id });
     res.json(result);
   } catch (error) {
     res.json(error);
