@@ -96,7 +96,7 @@ orderRoute.post("/", Auth, async (req, res) => {
         id: req.user.id,
         name: `${req.user.firstname} ${req.user.lastname}`,
         email: req.user.email,
-        email: req.user.phone,
+        phone: req.user.phone,
       };
       data["user"] = createBy;
       data["productImages"] = productImages;
