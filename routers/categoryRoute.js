@@ -31,30 +31,43 @@ categoryRoute.get("/:id", Auth, async (req, res) => {
 });
 categoryRoute.post("/", Auth, async (req, res) => {
   try {
-    const packageData = {
-      name: "CELINE",
-      brand: [
-        "623c79e95e447cb020b2f39d",
-        "623c79e95e447cb020b2f39e",
-        "623c79e95e447cb020b2f3a0",
-      ],
-
-      additionalOptions: [
-        "623e975ca99b7a62d47bbd40",
-        "623e975ca99b7a62d47bbd41",
-        "623e975ca99b7a62d47bbd42",
-      ],
-      otherService: ["623e9b80aef625f4839ec4c4", "623e9b80aef625f4839ec4c5"],
-      image: {
-        path: "http://localhost:3000/uploads/images/celine.png",
-        name: "celine.png",
+    const result = await Category.create(req.fields);
+    res.json(result);
+  } catch (error) {
+    res.json(error);
+  }
+});
+categoryRoute.put("/:id", Auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { categoryName } = req.fields;
+    if (!id) {
+      res.send("ไม่พบข้อมูล");
+    }
+    const result = await Category.findOneAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          categoryName: categoryName, //อัปโหลดสลิปแล้ว
+        },
       },
-      price: 1500,
-      discount: 1390,
-      status: "draft",
-      discountStatus: false,
-    };
-    const result = await Package.insertMany(packageData);
+      {
+        upsert: true,
+        returnDocument: "after", // this is new !
+      }
+    );
+    res.json(result);
+  } catch (error) {
+    res.json(error);
+  }
+});
+categoryRoute.delete("/:id", Auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      res.send("ไม่พบข้อมูล");
+    }
+    const result = await Category.deleteOne({ _id: id });
     res.json(result);
   } catch (error) {
     res.json(error);
