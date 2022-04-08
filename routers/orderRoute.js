@@ -4,6 +4,7 @@ import Order from "../models/OrderModel";
 import User from "../models/UserModel";
 import { uploadImage } from "../utils/utils";
 import moment from "moment";
+import OrderStatus from "../models/OrderStatusModel";
 const orderRoute = express.Router();
 
 const getPagination = (page, size) => {
@@ -14,7 +15,7 @@ const getPagination = (page, size) => {
 
 orderRoute.get("/", Auth, async (req, res) => {
   try {
-    const { page, size, title, backend } = req.query;
+    const { page, size, title, backend, order_status } = req.query;
     const { limit, offset } = getPagination(page - 1, size);
     var options = {
       populate: [
@@ -29,12 +30,26 @@ orderRoute.get("/", Auth, async (req, res) => {
       limit: limit,
     };
     let condition = {};
-    const packages = await Order.paginate(condition, options);
+    if (order_status) {
+      if (order_status != "all") {
+        condition = { orderStatus: order_status };
+      }
+    }
+    const orders = await Order.paginate(condition, options);
+    const orderStatus = await OrderStatus.find({});
+    const outputCount = [];
+    let countOrderAll = await Order.countDocuments({});
+    outputCount.push({ id: "all", name: "ทั้งหมด", count: countOrderAll });
+    for (let i of orderStatus) {
+      let countOrder = await Order.countDocuments({ orderStatus: i._id });
+      outputCount.push({ id: i._id, name: i.name, count: countOrder });
+    }
     res.json({
-      data: packages.docs,
-      total: packages.totalDocs,
-      totalPages: packages.totalPages,
-      currentPage: packages.page,
+      data: orders.docs,
+      countData: backend ? outputCount : [],
+      total: orders.totalDocs,
+      totalPages: orders.totalPages,
+      currentPage: orders.page,
     });
   } catch (error) {
     res.json(error);
