@@ -32,30 +32,53 @@ otherServiceRoute.get("/:id", Auth, async (req, res) => {
 });
 otherServiceRoute.post("/", Auth, async (req, res) => {
   try {
-    const packageData = {
-      name: "CELINE",
-      brand: [
-        "623c79e95e447cb020b2f39d",
-        "623c79e95e447cb020b2f39e",
-        "623c79e95e447cb020b2f3a0",
-      ],
-
-      additionalOptions: [
-        "623e975ca99b7a62d47bbd40",
-        "623e975ca99b7a62d47bbd41",
-        "623e975ca99b7a62d47bbd42",
-      ],
-      otherService: ["623e9b80aef625f4839ec4c4", "623e9b80aef625f4839ec4c5"],
-      image: {
-        path: "http://localhost:3000/uploads/images/celine.png",
-        name: "celine.png",
+      const result = await OtherService.create(req.fields);
+      res.json(result);
+  } catch (error) {
+    res.json(error);
+  }
+});
+otherServiceRoute.put("/:id", Auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.fields;
+    const { detail } = req.fields;
+    const { price } = req.fields;
+    const { discount } = req.fields;
+    const { discountStatus } = req.fields;
+    if (!id) {
+      res.send("ไม่พบข้อมูล");
+    }
+    const result = await OtherService.findOneAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          name: name,
+          detail: detail,
+          price: price,
+          discount: discount,
+          discountStatus: discountStatus,
+          
+        },
       },
-      price: 1500,
-      discount: 1390,
-      status: "draft",
-      discountStatus: false,
-    };
-    const result = await AdditionalOption.insertMany(packageData);
+      {
+        upsert: true,
+        returnDocument: "after", 
+      }
+    );
+    res.json(result);
+  } catch (error) {
+    res.json(error);
+  }
+});
+
+otherServiceRoute.delete("/:id", Auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      res.send("ไม่พบข้อมูล");
+    }
+    const result = await OtherService.deleteOne({ _id: id });
     res.json(result);
   } catch (error) {
     res.json(error);
