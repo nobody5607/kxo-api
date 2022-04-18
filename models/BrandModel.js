@@ -5,6 +5,9 @@ const brandSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    status: {
+      type: Number 
+    },
   },
   {
     timestamps: true,

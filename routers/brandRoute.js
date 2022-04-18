@@ -28,6 +28,8 @@ brandRoute.post("/", Auth, async (req, res) => {
     res.json(error);
   }
 });
+
+//update or update status
 brandRoute.put("/:id", Auth, async (req, res) => {
   try {
     const { id } = req.params;
