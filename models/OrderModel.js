@@ -90,6 +90,23 @@ const orderSchema = mongoose.Schema(
       required: true,
       ref: "OrderStatus",
     },
+    address: {
+      amphure: {
+        AMPHUR_ID: { type: Number },
+        AMPHUR_NAME: { type: String }
+      },
+      district: {
+        DISTRICT_ID: { type: String },
+        DISTRICT_NAME: { type: String }
+      },
+      province: {
+        PROVINCE_ID: { type: Number },
+        PROVINCE_NAME: { type: String }
+      },
+      your_address: { type: String },
+      zip_code: { type: String }
+    }
+    //address
   },
   {
     timestamps: true,
