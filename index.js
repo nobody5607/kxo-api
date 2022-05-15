@@ -13,6 +13,7 @@ import categoryRoute from "./routers/categoryRoute";
 import additionalRoute from "./routers/additionalRoute";
 import otherServiceRoute from "./routers/otherServiceRoute";
 import orderStatusRoute from "./routers/orderStatusRoute";
+import userAddressRoute from "./routers/userAddressRoute";
 dotenv.config();
 connectDatabase(); //connection db
 app.use(cors());
@@ -23,7 +24,7 @@ const PORT = process.env.APP_PORT || 3000;
 app.get("/", async (req, res) => {
   res.send("katexoxo");
 });
-const defaultPath = "/api/kate-check/";
+const defaultPath = "/api/katexoxo/";
 app.use("/api/import/", importRoute);
 app.use(defaultPath + "package", packageRoute);
 app.use(defaultPath + "order", orderRoute);
@@ -33,4 +34,5 @@ app.use(defaultPath + "brand", brandRoute);
 app.use(defaultPath + "category", categoryRoute);
 app.use(defaultPath + "additional", additionalRoute);
 app.use(defaultPath + "other-service", otherServiceRoute);
+app.use(defaultPath + "user-address", userAddressRoute);
 app.listen(PORT, () => console.log(`Start ... http://localhost:${PORT}`));
