@@ -16,7 +16,7 @@ userAddressRoute.get("/", Auth, async (req, res) => {
 userAddressRoute.get("/:id", Auth, async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await UserAddress.find({ "user.user_id": id });
+    const result = await UserAddress.findOne({ "user.user_id": id });
     res.json(result);
   } catch (error) {
     res.json(error);
