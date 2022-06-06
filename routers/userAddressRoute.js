@@ -102,7 +102,13 @@ userAddressRoute.put("/activete-address/:id", Auth, async (req, res) => {
 
     const result = await UserAddress.findOneAndUpdate(
       { _id: id },
-      { $set: { "addressDefault": data._id } }
+      {
+        $set: { "addressShipping": data._id },
+      },
+      {
+        upsert: true,
+        returnDocument: "after", // this is new !
+      }
     );
 
     res.json(result);
@@ -116,6 +122,8 @@ userAddressRoute.post("/", async (req, res) => {
     let { data } = req.fields;
     data = JSON.parse(data);
 
+
+
     const checkUser = await UserAddress.findOne({ user_id: data.user_id });
     if (checkUser) {
       //update data or update address
@@ -125,7 +133,7 @@ userAddressRoute.post("/", async (req, res) => {
       await UserAddress.create(data);
     }
     //updateOne({ _id: 1, grades: 80 }, { $set: { "grades.$": 82 } });
-    res.json(result);
+    res.json({ status: 'ok', message: 'insert data success' });
   } catch (error) {
     res.json(error);
   }

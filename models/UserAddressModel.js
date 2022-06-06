@@ -24,13 +24,11 @@ const userAddressSchema = mongoose.Schema(
         zip_code: { type: String },
       },
     ],
-    addressDefault: {
-      addressShipping: { type: Number },
-      addressOrderDefault: { type: Number },
-      addressKatecheckDefault: { type: Number },
-      addressSellWithUsDefault: { type: Number },
-      addressReturnProductDefault: { type: Number },
-    },
+    addressShipping: { type: String },
+    addressOrderDefault: { type: String },
+    addressKatecheckDefault: { type: String },
+    addressSellWithUsDefault: { type: String },
+    addressReturnProductDefault: { type: String },
   },
   {
     timestamps: true,
