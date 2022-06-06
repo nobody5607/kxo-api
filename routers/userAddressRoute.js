@@ -89,16 +89,22 @@ userAddressRoute.put("/activete-address/:id", Auth, async (req, res) => {
       return res.status(404).json({ message: "ไม่พบข้อมูล" });
     }
 
+    // await UserAddress.updateMany(
+    //   { user_id: data.user_id },
+    //   {
+    //     $set: { "addressShipping": null },
+    //   },
+    //   {
+    //     upsert: true,
+    //     returnDocument: "after", // this is new !
+    //   }
+    // );
+
     const result = await UserAddress.findOneAndUpdate(
       { _id: id },
-      {
-        $set: data,
-      },
-      {
-        upsert: true,
-        returnDocument: "after", // this is new !
-      }
+      { $set: { "addressDefault": data._id } }
     );
+
     res.json(result);
   } catch (error) {
     res.json(error);
