@@ -38,18 +38,25 @@ userAddressRoute.get("/edit-address/:id", Auth, async (req, res) => {
   }
 });
 
-userAddressRoute.delete("/delete-address/", Auth, async (req, res) => {
+userAddressRoute.post("/delete-address", Auth, async (req, res) => {
   try {
-    let { data } = req.fields;
-    data = JSON.parse(data);
+    const { id, sub_id } = req.fields;
 
+    if (!id) {
+      return res.status(404).json({ message: "ไม่พบข้อมูล" });
+    }
+
+    // const result = await UserAddress.deleteOne({ _id: id });
     const result = await UserAddress.findOneAndUpdate(
-      { user_id: data.user_id },
-      data
-    );
-    res.json(result);
+      { _id: id },
+      { $pull: { userAddress: { _id: sub_id } } },
+      {
+
+      });
+
+    res.json({ status: 'ok', message: 'Delete Successfully!' });
   } catch (error) {
-    res.json(error);
+    res.json({ status: 'nok', message: error });
   }
 });
 
@@ -63,21 +70,23 @@ userAddressRoute.put("/:id", Auth, async (req, res) => {
       return res.status(404).json({ message: "ไม่พบข้อมูล" });
     }
 
+    // res.json({ data, id });
+
     const result = await UserAddress.findOneAndUpdate(
-      { _id: id },
+      { _id: id, "userAddress._id": data._id },
       {
-        $set: data,
+        $set: { 'userAddress.$': data }
       },
-      {
-        upsert: true,
-        returnDocument: "after", // this is new !
-      }
+      // function (err, doc) {
+
+      // }
     );
-    res.json(result);
+    res.json({ status: 'ok', message: 'Update Successfully!' });
   } catch (error) {
-    res.json(error);
+    res.json({ status: 'nok', message: error });
   }
 });
+
 
 userAddressRoute.put("/activete-address/:id", Auth, async (req, res) => {
   try {
@@ -89,10 +98,21 @@ userAddressRoute.put("/activete-address/:id", Auth, async (req, res) => {
       return res.status(404).json({ message: "ไม่พบข้อมูล" });
     }
 
+    // await UserAddress.updateMany(
+    //   { user_id: data.user_id },
+    //   {
+    //     $set: { "addressShipping": null },
+    //   },
+    //   {
+    //     upsert: true,
+    //     returnDocument: "after", // this is new !
+    //   }
+    // );
+
     const result = await UserAddress.findOneAndUpdate(
       { _id: id },
       {
-        $set: { addressShipping: data._id },
+        $set: { "addressShipping": data._id },
       },
       {
         upsert: true,
@@ -111,16 +131,18 @@ userAddressRoute.post("/", async (req, res) => {
     let { data } = req.fields;
     data = JSON.parse(data);
 
+
+
     const checkUser = await UserAddress.findOne({ user_id: data.user_id });
     if (checkUser) {
       //update data or update address
       await UserAddress.findOneAndUpdate({ user_id: data.user_id }, data);
     } else {
-      //insert
+      //insert 
       await UserAddress.create(data);
     }
     //updateOne({ _id: 1, grades: 80 }, { $set: { "grades.$": 82 } });
-    res.json({ status: "ok", message: "insert data success" });
+    res.json({ status: 'ok', message: 'insert data success' });
   } catch (error) {
     res.json(error);
   }
