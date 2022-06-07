@@ -6,8 +6,8 @@ const userAddressRoute = express.Router();
 
 userAddressRoute.get("/", Auth, async (req, res) => {
   try {
-    const result = await UserAddress.find().sort({ user_id: 1 });
-    res.json(result);
+    const result = await UserAddress.findOne({ "user.user_id": req.user.id });
+    res.json({ status: 'ok', data: result });
   } catch (error) {
     res.json(error);
   }
@@ -15,8 +15,11 @@ userAddressRoute.get("/", Auth, async (req, res) => {
 
 userAddressRoute.get("/:id", Auth, async (req, res) => {
   try {
-    const { id } = req.params;
-    const result = await UserAddress.findOne({ "user.user_id": id });
+    let { id } = req.params;
+    if (!id) {
+      id = req.user.id;
+    }
+    const result = await UserAddress.findOne({ "user.user_id": req.user.id });
     res.json(result);
   } catch (error) {
     res.json(error);
@@ -46,13 +49,12 @@ userAddressRoute.post("/delete-address", Auth, async (req, res) => {
       return res.status(404).json({ message: "ไม่พบข้อมูล" });
     }
 
-    // const result = await UserAddress.deleteOne({ _id: id });
     const result = await UserAddress.findOneAndUpdate(
       { _id: id },
-      { $pull: { userAddress: { _id: sub_id } } },
       {
-
-      });
+        $pull: { userAddress: { _id: sub_id } }
+      }
+    );
 
     res.json({ status: 'ok', message: 'Delete Successfully!' });
   } catch (error) {
@@ -70,23 +72,18 @@ userAddressRoute.put("/:id", Auth, async (req, res) => {
       return res.status(404).json({ message: "ไม่พบข้อมูล" });
     }
 
-    // res.json({ data, id });
-
     const result = await UserAddress.findOneAndUpdate(
       { _id: id, "userAddress._id": data._id },
       {
         $set: { 'userAddress.$': data }
-      },
-      // function (err, doc) {
-
-      // }
+      }
     );
+
     res.json({ status: 'ok', message: 'Update Successfully!' });
   } catch (error) {
     res.json({ status: 'nok', message: error });
   }
 });
-
 
 userAddressRoute.put("/activete-address/:id", Auth, async (req, res) => {
   try {
@@ -98,31 +95,16 @@ userAddressRoute.put("/activete-address/:id", Auth, async (req, res) => {
       return res.status(404).json({ message: "ไม่พบข้อมูล" });
     }
 
-    // await UserAddress.updateMany(
-    //   { user_id: data.user_id },
-    //   {
-    //     $set: { "addressShipping": null },
-    //   },
-    //   {
-    //     upsert: true,
-    //     returnDocument: "after", // this is new !
-    //   }
-    // );
-
     const result = await UserAddress.findOneAndUpdate(
       { _id: id },
       {
         $set: { "addressShipping": data._id },
-      },
-      {
-        upsert: true,
-        returnDocument: "after", // this is new !
       }
     );
 
-    res.json(result);
+    res.json({ status: 'ok', message: 'Update Successfully!' });
   } catch (error) {
-    res.json(error);
+    res.json({ status: 'nok', message: error });
   }
 });
 
@@ -130,8 +112,6 @@ userAddressRoute.post("/", async (req, res) => {
   try {
     let { data } = req.fields;
     data = JSON.parse(data);
-
-
 
     const checkUser = await UserAddress.findOne({ user_id: data.user_id });
     if (checkUser) {
@@ -141,10 +121,10 @@ userAddressRoute.post("/", async (req, res) => {
       //insert 
       await UserAddress.create(data);
     }
-    //updateOne({ _id: 1, grades: 80 }, { $set: { "grades.$": 82 } });
-    res.json({ status: 'ok', message: 'insert data success' });
+
+    res.json({ status: 'ok', message: 'Insert Data Successfully!' });
   } catch (error) {
-    res.json(error);
+    res.json({ status: 'nok', message: error });
   }
 });
 
