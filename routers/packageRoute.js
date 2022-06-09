@@ -11,7 +11,7 @@ const getPagination = (page, size) => {
 
 packageRoute.get("/", Auth, async (req, res) => {
   try {
-    const { page, size, title, backend } = req.query;
+    const { page, size, title, backend ,status} = req.query;
     const { limit, offset } = getPagination(page - 1, size);
     var options = {
       //sort: { date: -1 },
@@ -30,13 +30,30 @@ packageRoute.get("/", Auth, async (req, res) => {
       limit: limit,
     };
     let condition = {};
+    
+    if (status) {
+      if (status != "" && status != "all") {
+        condition = { status: status };
+      }
+    }
     if (!backend) {
       condition = { status: "publish" };
     }
     const packages = await Package.paginate(condition, options);
-
+    // const packagesAll = await Package.find({});
+    const outputCount = [];
+    let countPackagesAll = await Package.countDocuments({});
+    outputCount.push({ id: "all", name: "ทั้งหมด", count: countPackagesAll });
+    let countPublish = await Package.countDocuments({ status: "publish" })
+    outputCount.push({ id: "publish", name: "publish", count: countPublish });
+    let countdarft = await Package.countDocuments({ status: "darft" })
+    outputCount.push({ id: "darft", name: "darft", count: countdarft });
+    let countdelete = await Package.countDocuments({ status: "delete" })
+    outputCount.push({ id: "delete", name: "delete", count: countdelete });
+    console.log(outputCount);
     res.json({
       data: packages.docs,
+      countData: backend ? outputCount : [],
       total: packages.totalDocs,
       totalPages: packages.totalPages,
       currentPage: packages.page,
