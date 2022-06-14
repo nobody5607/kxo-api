@@ -4,7 +4,7 @@ import UserAddress from "../models/UserAddressModel";
 
 const userAddressRoute = express.Router();
 
-userAddressRoute.get("/", Auth, async(req, res) => {
+userAddressRoute.get("/", Auth, async (req, res) => {
     try {
         const result = await UserAddress.findOne({ "user.user_id": req.user.id });
         res.json({ status: 'ok', data: result });
@@ -13,7 +13,7 @@ userAddressRoute.get("/", Auth, async(req, res) => {
     }
 });
 
-userAddressRoute.get("/:id", Auth, async(req, res) => {
+userAddressRoute.get("/:id", Auth, async (req, res) => {
     try {
         let { id } = req.params;
         if (!id) {
@@ -26,7 +26,7 @@ userAddressRoute.get("/:id", Auth, async(req, res) => {
     }
 });
 
-userAddressRoute.get("/edit-address/:id", Auth, async(req, res) => {
+userAddressRoute.get("/edit-address/:id", Auth, async (req, res) => {
     try {
         const { id } = req.params;
 
@@ -41,7 +41,7 @@ userAddressRoute.get("/edit-address/:id", Auth, async(req, res) => {
     }
 });
 
-userAddressRoute.post("/delete-address", Auth, async(req, res) => {
+userAddressRoute.post("/delete-address", Auth, async (req, res) => {
     try {
         const { id, sub_id } = req.fields;
 
@@ -59,7 +59,7 @@ userAddressRoute.post("/delete-address", Auth, async(req, res) => {
     }
 });
 
-userAddressRoute.put("/:id", Auth, async(req, res) => {
+userAddressRoute.put("/:id", Auth, async (req, res) => {
     try {
         let { data } = req.fields;
         data = JSON.parse(data);
@@ -79,7 +79,7 @@ userAddressRoute.put("/:id", Auth, async(req, res) => {
     }
 });
 
-userAddressRoute.post("/activete-address", Auth, async(req, res) => {
+userAddressRoute.post("/activete-address", Auth, async (req, res) => {
     try {
         const { id, sub_id } = req.fields;
 
@@ -97,7 +97,40 @@ userAddressRoute.post("/activete-address", Auth, async(req, res) => {
     }
 });
 
-userAddressRoute.post("/", async(req, res) => {
+userAddressRoute.post("/default-address", Auth, async (req, res) => {
+    try {
+        const { id, sub_id, def_id } = req.fields;
+
+        if (!id) {
+            return res.status(404).json({ message: "ไม่พบข้อมูล" });
+        }
+
+        if (def_id && def_id == 1) {
+            const result = await UserAddress.findOneAndUpdate({ _id: id }, {
+                $set: { "addressOrderDefault": sub_id },
+            });
+        } else if (def_id && def_id == 2) {
+            const result = await UserAddress.findOneAndUpdate({ _id: id }, {
+                $set: { "addressKatecheckDefault": sub_id },
+            });
+        } else if (def_id && def_id == 3) {
+            const result = await UserAddress.findOneAndUpdate({ _id: id }, {
+                $set: { "addressSellWithUsDefault": sub_id },
+            });
+        } else if (def_id && def_id == 4) {
+            const result = await UserAddress.findOneAndUpdate({ _id: id }, {
+                $set: { "addressReturnProductDefault": sub_id },
+            });
+        }
+
+        res.json({ status: 'ok', message: 'Activete Successfully!' });
+    } catch (error) {
+        res.json({ status: 'nok', message: error });
+    }
+});
+
+
+userAddressRoute.post("/", async (req, res) => {
     try {
         let { data } = req.fields;
         data = JSON.parse(data);
