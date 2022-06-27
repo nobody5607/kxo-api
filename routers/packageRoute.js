@@ -9,9 +9,9 @@ const getPagination = (page, size) => {
   return { limit, offset };
 };
 
-packageRoute.get("/", Auth, async (req, res) => {
+packageRoute.get("/", async (req, res) => {
   try {
-    const { page, size, title, backend ,status} = req.query;
+    const { page, size, title, backend, status } = req.query;
     const { limit, offset } = getPagination(page - 1, size);
     var options = {
       //sort: { date: -1 },
@@ -30,15 +30,17 @@ packageRoute.get("/", Auth, async (req, res) => {
       limit: limit,
     };
     let condition = {};
-    
+
     if (status) {
       if (status != "" && status != "all") {
         condition = { status: status };
       }
     }
+
     if (!backend) {
       condition = { status: "publish" };
     }
+
     const packages = await Package.paginate(condition, options);
     // const packagesAll = await Package.find({});
     const outputCount = [];
