@@ -91,18 +91,9 @@ const orderSchema = mongoose.Schema(
       ref: "OrderStatus",
     },
     address: {
-      amphure: {
-        AMPHUR_ID: { type: Number },
-        AMPHUR_NAME: { type: String }
-      },
-      district: {
-        DISTRICT_ID: { type: String },
-        DISTRICT_NAME: { type: String }
-      },
-      province: {
-        PROVINCE_ID: { type: Number },
-        PROVINCE_NAME: { type: String }
-      },
+      amphure_id: { type: Number },
+      district_id: { type: Number },
+      province_id: { type: Number },
       your_address: { type: String },
       zip_code: { type: String }
     }
