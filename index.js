@@ -24,7 +24,7 @@ const PORT = process.env.APP_PORT || 3000;
 app.get("/", async (req, res) => {
   res.send("katexoxo");
 });
-const defaultPath = "/kato-ckeck/api/katexoxo/";
+const defaultPath = "/kate-ckeck/api/katexoxo/";
 app.use("/api/import/", importRoute);
 app.use(defaultPath + "package", packageRoute);
 app.use(defaultPath + "order", orderRoute);
