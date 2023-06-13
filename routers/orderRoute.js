@@ -8,14 +8,14 @@ import OrderStatus from "../models/OrderStatusModel";
 const orderRoute = express.Router();
 
 const getPagination = (page, size) => {
-  const limit = size ? +size : 10;
+  const limit = size ? +size : 100;
   const offset = page ? page * limit : 0;
   return { limit, offset };
 };
 
 orderRoute.get("/", Auth, async (req, res) => {
   try {
-    const { page, size, title, backend, order_status } = req.query;
+    const { page, size, backend, order_status } = req.query;
     const { limit, offset } = getPagination(page - 1, size);
     var options = {
       populate: [
@@ -28,6 +28,7 @@ orderRoute.get("/", Auth, async (req, res) => {
       lean: true,
       offset: offset,
       limit: limit,
+      sort: { _id: -1 },
     };
     let condition = {};
     if (order_status) {
