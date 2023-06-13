@@ -108,9 +108,14 @@ orderRoute.post("/", Auth, async (req, res) => {
         });
         number++;
       }
+      let userName = `${req.user.firstname} ${req.user.lastname}`;
+      if (req.user.name) {
+        userName = req.user.name;
+      }
+
       let createBy = {
         id: req.user.id,
-        name: `${req.user.firstname} ${req.user.lastname}`,
+        name: userName,
         email: req.user.email,
         phone: req.user.phone,
       };
